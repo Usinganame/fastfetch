@@ -31,7 +31,7 @@ static bool checkHdrStatus(FFDisplayResult* display)
     return false;
 }
 
-static void detectWithDumpsys(FFDisplayServerResult* ds)
+void detectWithDumpsys(FFDisplayServerResult* ds)
 {
     FF_STRBUF_AUTO_DESTROY buf = ffStrbufCreate();
     if (ffProcessAppendStdOut(&buf, (char* []) {
@@ -106,7 +106,7 @@ static void detectWithDumpsys(FFDisplayServerResult* ds)
     }
 }
 
-static bool detectWithGetprop(FFDisplayServerResult* ds)
+bool detectWithGetprop(FFDisplayServerResult* ds)
 {
     // Only for MiUI
     FF_STRBUF_AUTO_DESTROY buffer = ffStrbufCreate();
@@ -145,11 +145,11 @@ static bool detectWithGetprop(FFDisplayServerResult* ds)
     return false;
 }
 
-void ffConnectDisplayServerImpl(FFDisplayServerResult* ds)
-{
-    ffStrbufSetStatic(&ds->wmProcessName, "WindowManager");
-    ffStrbufSetStatic(&ds->wmPrettyName, "Window Manager");
-
-    if (!detectWithGetprop(ds))
-        detectWithDumpsys(ds);
-}
+// void ffConnectDisplayServerImpl(FFDisplayServerResult* ds)
+// {
+//     ffStrbufSetStatic(&ds->wmProcessName, "WindowManager");
+//     ffStrbufSetStatic(&ds->wmPrettyName, "Window Manager");
+//
+//     if (!detectWithGetprop(ds))
+//         detectWithDumpsys(ds);
+// }

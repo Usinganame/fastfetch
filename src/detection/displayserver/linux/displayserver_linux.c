@@ -2,6 +2,10 @@
 #include "common/io/io.h"
 #include "util/stringUtils.h"
 
+#ifdef __ANDROID__
+    #include "detection/displayserver/displayserver_android.h"
+#endif
+
 #ifdef __FreeBSD__
     #include "common/settings.h"
 #endif
@@ -41,6 +45,14 @@ static void getWMProtocolNameFromEnv(FFDisplayServerResult* result)
         ffStrbufSetStatic(&result->wmProtocolName, FF_WM_PROTOCOL_TTY);
         return;
     }
+
+    #ifdef __ANDROID__
+    if(ffStrSet(env) && ffStrEqualsIgnCase(env, "xterm-256color"))
+    {
+        ffStrbufSetStatic(&result->wmProtocolName, FF_WM_PROTOCOL_ANDROID);
+        return;
+    }
+    #endif
 }
 
 void ffConnectDisplayServerImpl(FFDisplayServerResult* ds)
@@ -89,11 +101,22 @@ void ffConnectDisplayServerImpl(FFDisplayServerResult* ds)
     if (ds->wmProtocolName.length == 0)
         getWMProtocolNameFromEnv(ds);
 
-    if(!ffStrbufEqualS(&ds->wmProtocolName, FF_WM_PROTOCOL_TTY))
+    if(!ffStrbufEqualS(&ds->wmProtocolName, FF_WM_PROTOCOL_TTY) && !ffStrbufEqualS(&ds->wmProtocolName, FF_WM_PROTOCOL_ANDROID))
     {
         //This fills in missing information about WM / DE by using env vars and iterating processes
         ffdsDetectWMDE(ds);
     }
+
+    #ifdef __ANDROID__
+    if(ffStrbufEqualS(&ds->wmProtocolName, FF_WM_PROTOCOL_ANDROID))
+    {
+        ffStrbufSetStatic(&ds->wmProcessName, "WindowManager");
+        ffStrbufSetStatic(&ds->wmPrettyName, "Window Manager");
+
+        if (!detectWithGetprop(ds))
+            detectWithDumpsys(ds);
+    }
+    #endif
 }
 
 FFDisplayType ffdsGetDisplayType(const char* name)

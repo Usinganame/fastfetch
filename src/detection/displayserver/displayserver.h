@@ -43,6 +43,7 @@
 #define FF_WM_PROTOCOL_TTY "TTY"
 #define FF_WM_PROTOCOL_X11 "X11"
 #define FF_WM_PROTOCOL_WAYLAND "Wayland"
+#define FF_WM_PROTOCOL_ANDROID "Android"
 
 typedef enum __attribute__((__packed__)) FFDisplayType {
     FF_DISPLAY_TYPE_UNKNOWN,

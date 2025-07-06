@@ -592,6 +592,7 @@ elseif(ANDROID)
         src/detection/physicaldisk/physicaldisk_linux.c
         src/detection/physicalmemory/physicalmemory_nosupport.c
         src/detection/diskio/diskio_linux.c
+        src/detection/displayserver/displayserver_android.c
         src/detection/displayserver/linux/displayserver_linux.c
         src/detection/displayserver/linux/drm.c
         src/detection/displayserver/linux/xcb.c
